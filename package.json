@@ -52,9 +52,9 @@
     ]
   },
   "peerDependencies": {
-    "@rxreact/core": "5.x",
-    "react": "16.x",
-    "rxjs": "6.x"
+    "@rxreact/core": ">= 5.0",
+    "react": ">= 16.5.2",
+    "rxjs": ">= 6.2.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^7.1.2",
