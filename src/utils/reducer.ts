@@ -1,23 +1,22 @@
-import { uniqWith } from 'lodash'
-import { Observable, merge } from 'rxjs'
-import { map, scan, shareReplay } from 'rxjs/operators'
+import { Observable, merge } from "rxjs";
+import { map, scan, shareReplay } from "rxjs/operators";
 
-type ObservableReducer<T, List> = [Observable<T>, (state: List, value: T) => List]
+type ObservableReducer<T, List> = [Observable<T>, (state: List, value: T) => List];
 
 export function reducer<List, O1>(
   pairs: [ObservableReducer<O1, List>],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2>(
   pairs: [ObservableReducer<O1, List>, ObservableReducer<O2, List>],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2, O3>(
   pairs: [ObservableReducer<O1, List>, ObservableReducer<O2, List>, ObservableReducer<O3, List>],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2, O3, O4>(
   pairs: [
@@ -27,7 +26,7 @@ export function reducer<List, O1, O2, O3, O4>(
     ObservableReducer<O4, List>
   ],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2, O3, O4, O5>(
   pairs: [
@@ -38,7 +37,7 @@ export function reducer<List, O1, O2, O3, O4, O5>(
     ObservableReducer<O5, List>
   ],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2, O3, O4, O5, O6>(
   pairs: [
@@ -50,7 +49,7 @@ export function reducer<List, O1, O2, O3, O4, O5, O6>(
     ObservableReducer<O6, List>
   ],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2, O3, O4, O5, O6, O7>(
   pairs: [
@@ -63,7 +62,7 @@ export function reducer<List, O1, O2, O3, O4, O5, O6, O7>(
     ObservableReducer<O7, List>
   ],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2, O3, O4, O5, O6, O7, O8>(
   pairs: [
@@ -77,7 +76,7 @@ export function reducer<List, O1, O2, O3, O4, O5, O6, O7, O8>(
     ObservableReducer<O8, List>
   ],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, O1, O2, O3, O4, O5, O6, O7, O8, O9>(
   pairs: [
@@ -92,7 +91,7 @@ export function reducer<List, O1, O2, O3, O4, O5, O6, O7, O8, O9>(
     ObservableReducer<O9, List>
   ],
   startWith: List
-): Observable<List>
+): Observable<List>;
 
 export function reducer<List, T>(
   pairs: ObservableReducer<T, List>[],
@@ -100,13 +99,13 @@ export function reducer<List, T>(
 ): Observable<List> {
   const xs = pairs.map(([observable, _mapper], index) =>
     observable.pipe(map(value => ({ index, payload: value })))
-  )
+  );
 
   return merge(...xs).pipe(
     scan((state, { index, payload }) => {
-      const [, f] = pairs[index]
-      return f(state, payload)
+      const [, f] = pairs[index];
+      return f(state, payload);
     }, startWith),
     shareReplay(1)
-  )
+  );
 }

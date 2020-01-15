@@ -1,15 +1,15 @@
-import { of, Subject } from 'rxjs'
+import { of, Subject } from "rxjs";
 
-import '../test/signals'
-import { getProp } from './getProp'
+import "../test/signals";
+import { getProp } from "./getProp";
 
-describe('operators', () => {
-  describe('getProp', () => {
-    it('pulls a property from an observable of an object', async () => {
-      const o$ = of({ foo: 'bar' })
-      const foo$ = o$.pipe(getProp('foo'))
+describe("operators", () => {
+  describe("getProp", () => {
+    it("pulls a property from an observable of an object", async () => {
+      const o$ = of({ foo: "bar" });
+      const foo$ = o$.pipe(getProp("foo"));
 
-      await expect(foo$).toEmitValue('bar')
-    })
-  })
-})
+      await expect(foo$).toEmitValue("bar");
+    });
+  });
+});

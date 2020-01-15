@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react'
-import { Observable, Subscription } from 'rxjs'
-import { withViewModel, ViewModel, Difference, ActionMap } from '@rxreact/core'
+import * as React from "react";
+import { Observable, Subscription } from "rxjs";
+import { withViewModel, ViewModel, Difference, ActionMap } from "@rxreact/core";
 
 type NonSignalGraphProps<Props, Selectors, Actions, OwnProps> = Difference<
   Props,
   Selectors & ActionMap<Actions>
 > &
-  OwnProps
+  OwnProps;
 
 export type ConnectViewModel<Selectors, Actions> = ViewModel<Selectors, Actions> & {
-  unsubscribe?: Subscription[]
-}
+  unsubscribe?: Subscription[];
+};
 
 export function connect<SignalGraph, Selectors, Actions, OwnProps>(
   context: React.Context<SignalGraph>,
@@ -31,41 +31,45 @@ export function connect<SignalGraph, Selectors, Actions, OwnProps>(
       OwnProps
     >> = props => {
       // The Child component to render
-      const [{ Child }, setChild] = useState<{
-        Child: React.ComponentClass<NonSignalGraphProps<Props, Selectors, Actions, OwnProps>> | null
-      }>({ Child: null })
+      const [{ Child }, setChild] = React.useState<{
+        Child: React.ComponentClass<
+          NonSignalGraphProps<Props, Selectors, Actions, OwnProps>
+        > | null;
+      }>({ Child: null });
 
-      const [localSubscriptions, setLocalSubscriptions] = useState<Subscription[] | null>(null)
+      const [localSubscriptions, setLocalSubscriptions] = React.useState<Subscription[] | null>(
+        null
+      );
 
-      const signalGraph = useContext(context)
+      const signalGraph = React.useContext(context);
 
       // Wrap the child with `withViewModel`, but only do this once.
-      useEffect(() => {
+      React.useEffect(() => {
         const child = withViewModel((ownProps: Observable<OwnProps>) => {
-          const { inputs, outputs, unsubscribe } = viewModelFactory(signalGraph, ownProps)
+          const { inputs, outputs, unsubscribe } = viewModelFactory(signalGraph, ownProps);
 
           // Store the unsubscribes for cleanup.
-          setLocalSubscriptions(unsubscribe || null)
+          setLocalSubscriptions(unsubscribe || null);
 
-          return { inputs, outputs }
-        })(Component)
+          return { inputs, outputs };
+        })(Component);
         // Wrap the child in an object, because `setChild` when passed a
         // function (like a component) will actually call the function.
-        setChild({ Child: child })
-      }, [signalGraph])
+        setChild({ Child: child });
+      }, [signalGraph]);
 
       // On destroy, perform cleanup
-      useEffect(() => {
+      React.useEffect(() => {
         return () => {
           if (localSubscriptions) {
-            localSubscriptions.map(subscription => subscription.unsubscribe())
+            localSubscriptions.map(subscription => subscription.unsubscribe());
           }
-        }
-      }, [localSubscriptions])
+        };
+      }, [localSubscriptions]);
 
-      return Child ? <Child {...props} /> : null
-    }
+      return Child ? <Child {...props} /> : null;
+    };
 
-    return Connected
-  }
+    return Connected;
+  };
 }

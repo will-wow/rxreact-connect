@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import * as React from "react";
 
-export function createSignalGraphProvider<T, Parent>(
-  Context: React.Context<T>,
-  createSignalGraph: (signals?: Parent) => T
-): React.FunctionComponent {
-  return function SignalGraphProvider({ children }) {
-    const [signals] = useState(() => createSignalGraph())
-    return <Context.Provider value={signals}>{children}</Context.Provider>
-  }
+export function createSignalGraphContext<T>(
+  createSignalGraph: () => T
+): [React.Context<T>, React.FunctionComponent] {
+  const signalGraph = createSignalGraph();
+  const SignalGraphContext = React.createContext(signalGraph);
+
+  const SignalGraphProvider: React.FunctionComponent = ({ children }) => {
+    return (
+      <SignalGraphContext.Provider value={signalGraph}>{children}</SignalGraphContext.Provider>
+    );
+  };
+
+  return [SignalGraphContext, SignalGraphProvider];
 }

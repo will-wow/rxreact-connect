@@ -1,34 +1,34 @@
-import { Observable } from 'rxjs'
-import { shareReplay } from 'rxjs/operators'
+import { Observable } from "rxjs";
+import { shareReplay } from "rxjs/operators";
 
-type Result<T> = OkResult<T> | ErrorResult
+type Result<T> = OkResult<T> | ErrorResult;
 
 interface OkResult<T> {
-  ok: true
-  data: T
+  ok: true;
+  data: T;
 }
 
 interface ErrorResult {
-  ok: false
-  message: string
+  ok: false;
+  message: string;
 }
 
 function ok<T>(data: T): OkResult<T> {
   return {
     ok: true,
     data
-  }
+  };
 }
 
 function err(message: string): ErrorResult {
   return {
     ok: false,
     message
-  }
+  };
 }
 
 function isOk<T>(result: OkResult<T> | ErrorResult): result is OkResult<T> {
-  return result.ok
+  return result.ok;
 }
 
 /**
@@ -39,29 +39,29 @@ function isOk<T>(result: OkResult<T> | ErrorResult): result is OkResult<T> {
  */
 export const watchSignal = <T>(o$: Observable<T>) => {
   // Share so the signal records emissions.
-  const hot$ = o$.pipe(shareReplay(1))
+  const hot$ = o$.pipe(shareReplay(1));
 
   // Subscribe to the signal so it starts emitting.
-  const subscription = hot$.subscribe()
+  const subscription = hot$.subscribe();
 
   // Clean up after the test is finished.
   afterEach(() => {
-    subscription.unsubscribe()
-  })
+    subscription.unsubscribe();
+  });
 
   // Return the hot signal for testing.
-  return hot$
-}
+  return hot$;
+};
 
 const resolveObservable = <T>(o: Observable<T>): Promise<Result<T>> =>
   new Promise(resolve => {
-    const timeout = setTimeout(() => resolve(err('timeout')), 100)
+    const timeout = setTimeout(() => resolve(err("timeout")), 100);
 
     o.subscribe((value: T) => {
-      clearTimeout(timeout)
-      resolve(ok(value))
-    })
-  })
+      clearTimeout(timeout);
+      resolve(ok(value));
+    });
+  });
 
 const resolveObservableOnValue = <T>(
   utils: jest.MatcherUtils,
@@ -69,41 +69,41 @@ const resolveObservableOnValue = <T>(
   expected: T
 ): Promise<Result<T>> =>
   new Promise(resolve => {
-    const timeout = setTimeout(() => resolve(err('timeout')), 100)
+    const timeout = setTimeout(() => resolve(err("timeout")), 100);
 
     o.subscribe((value: T) => {
       if (utils.equals(value, expected)) {
-        clearTimeout(timeout)
-        resolve(ok(value))
+        clearTimeout(timeout);
+        resolve(ok(value));
       }
-    })
-  })
+    });
+  });
 
 /** Test that an observable did (or did not) emit anything */
 const toEmit: jest.CustomMatcher = async function toEmit<T>(
   this: jest.MatcherUtils,
   o: Observable<T>
 ) {
-  const result = await resolveObservable(o)
+  const result = await resolveObservable(o);
 
-  const pass = isOk(result)
+  const pass = isOk(result);
 
   const message = isOk(result)
     ? () =>
         // This error message will show if `pass === true`,
         // but the user called `.not.toEmit()`
-        `${this.utils.matcherHint('toEmit')}\n\n` +
-        'Expected signal not to emit\n' +
+        `${this.utils.matcherHint("toEmit")}\n\n` +
+        "Expected signal not to emit\n" +
         `Received: ${this.utils.printReceived(result.data)}`
     : () =>
         // This error message will show if `pass === false`,
         // and the user called `.toEmit()`
-        `${this.utils.matcherHint('toEmit')}\n\n` +
+        `${this.utils.matcherHint("toEmit")}\n\n` +
         `Expected signal to emit\n` +
-        `Signal did not emit`
+        `Signal did not emit`;
 
-  return { pass, message }
-}
+  return { pass, message };
+};
 
 /** Test that an observable did (or did not) emit a specific value */
 const toEmitValue: jest.CustomMatcher = async function toEmitValue<T>(
@@ -111,43 +111,43 @@ const toEmitValue: jest.CustomMatcher = async function toEmitValue<T>(
   o: Observable<T>,
   expected: T
 ) {
-  const result = await resolveObservableOnValue(this, o, expected)
+  const result = await resolveObservableOnValue(this, o, expected);
 
-  let actual: T | undefined
-  let pass = false
-  let message: () => string
+  let actual: T | undefined;
+  let pass = false;
+  let message: () => string;
 
   if (isOk(result)) {
-    actual = result.data
-    pass = this.equals(result.data, expected)
+    actual = result.data;
+    pass = this.equals(result.data, expected);
 
     message = pass
       ? () =>
-          `${this.utils.matcherHint('toEmit')}\n\n` +
+          `${this.utils.matcherHint("toEmit")}\n\n` +
           `Expected signal not to emit ${this.utils.printReceived(expected)}\n` +
           `Received: ${this.utils.printReceived(actual)}`
       : () =>
-          `${this.utils.matcherHint('toEmit')}\n\n` +
+          `${this.utils.matcherHint("toEmit")}\n\n` +
           `Expected: ${this.utils.printExpected(expected)}\n` +
-          `Received: ${this.utils.printReceived(actual)}`
+          `Received: ${this.utils.printReceived(actual)}`;
   } else {
     message = () =>
-      `${this.utils.matcherHint('toEmit')}\n\n` +
+      `${this.utils.matcherHint("toEmit")}\n\n` +
       `Expected: ${this.utils.printExpected(expected)}\n` +
-      `Signal did not emit`
+      `Signal did not emit`;
   }
 
-  return { actual, pass, message }
-}
+  return { actual, pass, message };
+};
 
-expect.extend({ toEmit, toEmitValue })
+expect.extend({ toEmit, toEmitValue });
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace, no-redeclare
   namespace jest {
-    interface Matchers<R> {
-      toEmit<T>(): Promise<R>
-      toEmitValue<T>(expectedValue: T): Promise<R>
+    interface Matchers<R, T> {
+      toEmit<T>(): Promise<R>;
+      toEmitValue<T>(expectedValue: T): Promise<R>;
     }
   }
 }
