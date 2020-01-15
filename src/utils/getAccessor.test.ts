@@ -1,4 +1,4 @@
-import { of, Subject } from "rxjs";
+import { Subject } from "rxjs";
 
 import { watchSignal } from "../test/signals";
 import { getAccessor } from "./getAccessor";

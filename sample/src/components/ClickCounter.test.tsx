@@ -34,7 +34,7 @@ describe("connect", () => {
       );
     });
 
-    it.only("starts with 0 clicks", () => {
+    it("starts with 0 clicks", () => {
       expect(wrapper.text()).toContain("Clicked 0 times");
     });
 

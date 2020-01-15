@@ -19,7 +19,9 @@
     "node": ">=6.0.0"
   },
   "scripts": {
-    "lint": "tslint  --project tsconfig.json -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "lint": "npm-run-all -c lint:*",
+    "lint:eslint": "eslint --fix '**/*.{ts,tsx}'",
+    "lint:prettier": "prettier --write '**/*.{tsx,ts,css,html,md,json}'",
     "prebuild": "rimraf dist",
     "build": "tsc --module commonjs && rollup -c rollup.config.ts && typedoc --out docs --target es6 --theme minimal --mode file src",
     "start": "rollup -c rollup.config.ts -w",
@@ -33,7 +35,7 @@
     "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
     "precommit": "lint-staged",
     "travis-deploy-once": "travis-deploy-once",
-    "format": "prettier --write '**/*.{tsx,ts,css,html,md}'"
+    "format": "prettier --write '**/*.{tsx,ts,css,html,md,json}'"
   },
   "lint-staged": {
     "{src,test}/**/*.ts": [
@@ -65,6 +67,8 @@
     "@types/jest": "^24.0.25",
     "@types/node": "^10.11.0",
     "@types/react": "^16.9.17",
+    "@typescript-eslint/eslint-plugin": "^2.3.3",
+    "@typescript-eslint/parser": "^2.3.3",
     "colors": "^1.3.2",
     "commitizen": "^3.0.0",
     "coveralls": "^3.0.9",
@@ -72,11 +76,16 @@
     "cz-conventional-changelog": "^2.1.0",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
+    "eslint": "^6.5.1",
+    "eslint-config-prettier": "^6.4.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
     "husky": "^1.0.1",
     "jest": "^24.9.0",
     "jest-config": "^24.9.0",
     "lint-staged": "^8.0.0",
     "lodash.camelcase": "^4.3.0",
+    "npm-run-all": "^4.1.5",
     "prettier": "^1.19.1",
     "prompt": "^1.0.0",
     "react": "^16.12.0",
@@ -96,9 +105,6 @@
     "ts-jest": "^24.3.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^7.0.1",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-config-standard": "^8.0.1",
     "typedoc": "^0.15.8",
     "typescript": "^3.7.4"
   },

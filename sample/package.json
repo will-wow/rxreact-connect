@@ -5,21 +5,27 @@
   "dependencies": {
     "@rxreact/connect": "file:../../connect",
     "@rxreact/core": "^5.1.1",
-    "@types/jest": "^24.0.0",
     "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
+    "@types/react": "^16.9.17",
     "@types/react-dom": "^16.9.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "3.3.0",
     "rxjs": "^6.5.4",
-    "typescript": "~3.7.2"
+    "typescript": "~3.7.4"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.9.0",
+    "enzyme": "^3.11.0",
+    "enzyme-adapter-react-16": "^1.15.2"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prestart": "rm -rf ./node_modules/@rxreact/connect/node_modules",
+    "pretest": "rm -rf ./node_modules/@rxreact/connect/node_modules"
   },
   "eslintConfig": {
     "extends": "react-app"

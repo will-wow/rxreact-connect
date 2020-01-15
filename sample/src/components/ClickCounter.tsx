@@ -16,8 +16,11 @@ export interface ClickCounterSignalProps {
   onClick: () => void;
 }
 
-export const ClickCounter: React.FunctionComponent<ClickCounterProps &
-  ClickCounterSignalProps> = ({ color, onClick, clickCount }) => {
+export const ClickCounter: React.FunctionComponent<ClickCounterProps & ClickCounterSignalProps> = ({
+  color,
+  onClick,
+  clickCount
+}) => {
   return (
     <div>
       <button onClick={onClick}>Click Me</button>

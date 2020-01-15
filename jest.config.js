@@ -6,12 +6,12 @@ module.exports = {
   clearMocks: true,
 
   // The directory where Jest should output its coverage files
-  coverageDirectory: 'coverage',
+  coverageDirectory: "coverage",
 
   // A set of global variables that need to be available in all test environments
   globals: {
-    'ts-jest': {
-      tsConfigFile: 'tsconfig.json'
+    "ts-jest": {
+      tsConfig: "tsconfig.json"
     }
   },
 
@@ -21,12 +21,14 @@ module.exports = {
   // ],
 
   // An array of file extensions your modules use
-  moduleFileExtensions: ['ts', 'tsx', 'js'],
+  moduleFileExtensions: ["ts", "tsx", "js"],
 
   // A map from regular expressions to paths to transformers
   transform: {
-    '^.+\\.(ts|tsx)$': 'ts-jest'
+    "^.+\\.(ts|tsx)$": "ts-jest"
   },
 
-  setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts']
-}
+  testPathIgnorePatterns: ["/node_modules/", "/sample/"],
+
+  setupFilesAfterEnv: ["<rootDir>/src/setupTests.ts"]
+};
